@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Weather Dashboard</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    .weather-container { margin-top: 20px; }
+    .weather-card { border: 1px solid #ddd; padding: 10px; margin: 10px 0; }
+  </style>
+</head>
+<body>
+  <h1>Weather Dashboard</h1>
+  <div>
+    <input type="text" id="city-input" placeholder="Enter city name">
+    <button id="get-weather">Get Weather</button>
+  </div>
+  <div class="weather-container" id="weather-container">
+    <!-- Weather data will be displayed here -->
+  </div>
+  <script>
+    document.getElementById('get-weather').addEventListener('click', function() {
+      const city = document.getElementById('city-input').value;
+      if (!city) {
+        alert('Please enter a city name');
+        return;
+      }
+      // Replace YOUR_API_KEY with your actual OpenWeather API key
+      const apiKey = 'YOUR_API_KEY';
+      const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+      
+      fetch(url)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.json();
+        })
+        .then(data => {
+          const container = document.getElementById('weather-container');
+          container.innerHTML = '';
+          const card = document.createElement('div');
+          card.className = 'weather-card';
+          card.innerHTML = `<h2>${data.name}</h2>
+                            <p>Temperature: ${data.main.temp} °C</p>
+                            <p>Weather: ${data.weather[0].description}</p>`;
+          container.appendChild(card);
+        })
+        .catch(error => {
+          alert('Error fetching weather data: ' + error);
+        });
+    });
+  </script>
+</body>
+</html>
